@@ -1,0 +1,18 @@
+{
+  "name": "my-app-sample",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "gcloud:build": "gcloud builds submit  --tag gcr.io/my-app-6154a/renderer",
+    "gcloud:run": "gcloud run deploy renderer --platform managed --region asia-northeast1 --set-env-vars=TZ=Asia/Tokyo --image gcr.io/my-app-6154a/renderer"
+  },
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "firebase": "^7.23.0",
+    "nuxt": "^2.14.6",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {}
+}

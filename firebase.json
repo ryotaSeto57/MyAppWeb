@@ -1,0 +1,27 @@
+{
+  "hosting": {
+    "public": ".nuxt/dist/client",
+    "ignore": [
+      "firebase.json",
+      "**/node_modules/**"
+    ],
+    "predeploy": [
+      "npm install",
+      "npm run build",
+      "rsync -ac static/ .nuxt/dist/client/"
+    ],
+    "postdeploy": [
+      "npm run gcloud:build",
+      "npm run gcloud:run"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "run": {
+          "serviceId": "renderer",
+          "region": "asia-northeast1"
+        }
+      }
+    ]
+  }
+}
