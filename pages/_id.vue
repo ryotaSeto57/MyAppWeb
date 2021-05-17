@@ -3,11 +3,11 @@
   <div id= "screenshot-container">
   <div id="slider-wrap">
     <ul id="slider">
-      <li v-for="url in Object.values(urlList)" v-bind:key="url">
+      <li v-for="url in Object.values(urlList)" v-bind:key="url" class="img-container">
         <img :src="url">
       </li>
     </ul>
-    <div class="btns" id="previous">
+    <div class="btns" id="previous" v-on:click="slideLeft">
         <svg id="svg-previous">
           <use xlink:href="#arrow-left">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6 11" id = "arrow-left">
@@ -18,7 +18,7 @@
           </use>
         </svg>
     </div>
-    <div class="btns" id="next">
+    <div class="btns" id="next" v-on:click="slideRight">
       <svg id = "svg-next">
         <use xlink:href="#arrow-right">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6 11" id = "arrow-right">
@@ -37,15 +37,16 @@
   <br>
   <ul>
     <li v-for="app in applist" v-bind:key="app.appUid">
-      <div id="app-container">
-        <div id="app-info">
-          <img :src="app.URL" id="app-image">
-          <div id = "app-name">{{app.appName}}</div>
+      <div class="app-container">
+        <div class="app-info">
+          <img :src="app.URL" class="app-image">
+          <div class = "app-name">{{app.appName}}</div>
           <a v-bind:href="'http://play.google.com/store/apps/details?id='+app.appUid">
-          <img v-bind:src="storeIconUrl"  id="store-icon">
+            <img v-bind:src="storeIconUrl"  class="store-icon">
           </a>
         </div>
-        <div id = "app-review">{{app.appReview}}</div>
+        <br>
+        <div class="app-review">{{app.appReview}}</div>
       </div>
     </li>
   </ul>
@@ -58,6 +59,8 @@ export default {
   data(){
     return{
       applist:[],
+      sliderPosition: 0,
+      sliderWidth:300,
       id: [],
       key: "",
       userId: Number,
@@ -89,7 +92,30 @@ export default {
     });
   },
   mounted(){
-    document.getElementById("slider").style.width =  Object.keys(this.urlList).length * 300 + "px"
+    this.sliderWidth = document.getElementById("slider").getBoundingClientRect().width;
+    document.getElementById("slider").style.width = Object.keys(this.urlList).length *  this.sliderWidth+ "px";
+    const imgContainer = document.getElementsByClassName("img-container")
+    for(let i = 0; i <imgContainer.length;i++){
+      imgContainer.item(i).style.width = this.sliderWidth + "px";
+    }
+  },
+  methods:{
+    slideRight: function(){
+      if(this.sliderPosition == Object.keys(this.urlList).length -1){
+        this.sliderPosition = 0;
+      }else{
+        this.sliderPosition++;
+      }
+      document.getElementById("slider").style.left = -this.sliderWidth * this.sliderPosition + "px" ;
+    },
+    slideLeft: function(){
+      if(this.sliderPosition==0){
+        this.sliderPosition = Object.keys(this.urlList).length - 1
+      }else{
+        this.sliderPosition--;
+      }
+      document.getElementById("slider").style.left = -this.sliderWidth*this.sliderPosition+ "px" ;
+    }
   }
 }
 </script>
@@ -120,8 +146,8 @@ export default {
   position:absolute;
   top: 0;
   left: 0;
-  width: 300px;
-  height:750px;
+  width: 100%;
+  height:100%;
   object-fit: contain;
 }
 #screenshot-description{
@@ -177,36 +203,38 @@ export default {
 #next{
   clear:left;
 }
-#app-image{
+.app-image{
   display: inline-block;
-  margin-top: 10px;
-  margin-left: 10px;
-  width: 60px;
+  margin-top: 1%;
+  margin-left: 1%;
+  width: 20%;
+  max-height: 95%;
+  object-fit: contain;
 }
-#app-name{
+.app-name{
   display: inline-block;
   position: relative;
-  margin-left:10px;
-  width: 140px;
-  top:-30%;
+  text-align: center;
+  width: 40%;
+  top:-35%;
   font-size: 120%;
 }
-#store-icon{
-  height: 45px;
+.store-icon{
+  width: 35%;
+  max-height: 80%;
+  object-fit: contain;
   position:relative;
-  top:-5%;
+  top:-7%;
   display: inline-block;
 }
-#app-info{
+.app-info{
   width: 100%;
   height: 70px;
-  
 }
-
-#app-review{
+.app-review{
   text-align: center;
 }
-#app-container{
+.app-container{
   background-color: aqua;
   margin: 10px;
   border-radius: 10px;
